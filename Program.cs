@@ -112,6 +112,7 @@ namespace HatchPack {
         static bool ParseCommandLineArgs(List<string> args) {
             for (int i = 0; i < args.Count;) {
                 if (args[i] == "--") {
+                    args.RemoveAt(i);
                     return true;
                 }
                 else if (args[i].StartsWith("-") || args[i].StartsWith("--")) {

@@ -339,8 +339,6 @@ namespace HatchPack {
 
 
             Console.WriteLine("Done!");
-
-            while (Debugger.IsAttached) ;
         }
     }
 }

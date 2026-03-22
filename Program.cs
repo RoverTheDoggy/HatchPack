@@ -256,7 +256,7 @@ namespace HatchPack {
                 else if (uncompressedTotal >= 1024)
                     identifierUncomp = "KB";
 
-                ulong compressedTotalUhhh = uncompressedTotal;
+                ulong compressedTotalUhhh = compressedTotal;
                 if (compressedTotalUhhh >= 1024)
                     compressedTotalUhhh /= 1024;
                 if (compressedTotalUhhh >= 1024)

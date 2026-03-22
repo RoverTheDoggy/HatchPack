@@ -265,7 +265,7 @@ namespace HatchPack {
         }
 
         static List<string> GetFileList(string resourcesFolder) {
-            if (nameMatches.Count == 0) {
+            if (nameMatches.Count == 0 && excludeMatches.Count == 0) {
                 string[] filePaths = Directory.GetFiles(resourcesFolder, "*.*", SearchOption.AllDirectories);
                 return new List<string>(filePaths);
             }
@@ -289,15 +289,30 @@ namespace HatchPack {
         }
 
         static bool PackHatchFile(string outFilename, string resourcesFolder) {
+            List<string> filesToPack;
+            try {
+                filesToPack = GetFileList(resourcesFolder);
+                if (filesToPack.Count == 0) {
+                    Console.WriteLine("No files to pack");
+                    return false;
+                }
+            }
+            catch (System.IO.DirectoryNotFoundException) {
+                Console.WriteLine("Directory '" + Path.GetFullPath(resourcesFolder) + "' not found");
+                return false;
+            }
+            catch (System.IO.IOException) {
+                Console.WriteLine("Invalid path '" + Path.GetFullPath(resourcesFolder) + "'");
+                return false;
+            }
+
             UInt64 offsetGLOB = 0;
             using (FileStream stream = new FileStream(outFilename, FileMode.Create)) {
                 stream.Write(new byte[] { 0x48, 0x41, 0x54, 0x43, 0x48 }, 0, 5); // HATCH
                 stream.Write(new byte[] { 0x01, 0x00, 0x00 }, 0, 3); // 1.0.0
 
-                List<string> filesToPack = GetFileList(resourcesFolder);
-
                 if (filesToPack.Count > 65535) {
-                    Console.WriteLine("Too many files to pack! (Count is " + filesToPack.Count + ", maximum is 65535)");
+                    Console.WriteLine("Too many files to pack (Count is " + filesToPack.Count + ", maximum is 65535)");
                     return false;
                 }
 
@@ -516,8 +531,6 @@ namespace HatchPack {
             if (!PackHatchFile(outFilename, resourcesFolder)) {
                 return 1;
             }
-
-            Console.WriteLine("Done!");
 
             return 0;
         }

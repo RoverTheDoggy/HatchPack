@@ -13,18 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install .NET Framework 4.6.1 Developer Pack
-        shell: pwsh
-        run: |
-          Invoke-WebRequest `
-            -Uri "https://download.microsoft.com/download/8/0/7/807A3C4E-0F6B-4B4A-9E6A-4A5A6A2B5F0F/NDP461-DevPack-KB3105179-ENU.exe" `
-            -OutFile "$env:TEMP\NDP461-DevPack.exe"
-
-          Start-Process `
-            "$env:TEMP\NDP461-DevPack.exe" `
-            -ArgumentList "/quiet", "/norestart" `
-            -Wait
-
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 

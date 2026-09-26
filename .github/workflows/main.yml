@@ -1,0 +1,26 @@
+name: Build HatchPack
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build HatchPack
+        run: msbuild /nologo /verbosity:minimal /p:Configuration=Release HatchPack.csproj
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: HatchPack
+          path: bin/Release/
